@@ -30,9 +30,19 @@ dataset 为数据库所在位置
 
 --multi_datasets 指明了 dataset 目录下是否有多个数据库。若要使用多个数据库进行检索，则应当将所有数据库文件夹组织如下：
 
-----dataset_total
+--dataset_total
+    
+  ---dataset1
+    
+  ---dataset2
+    
+# 需要的 python 库
+    cv2, numpy
 
---------dataset1
+  # 注意：
+  很多视频文件可能由于年代久远以及在不同软件中往复辗转，编码会出现问题（尤其尤其尤其是 wmv 文件），因此无法生成正常的数据库，目前没有好的解决办法
 
---------dataset2
-
+# 已生成的数据库
+    
+    spanking movie jp: https://mega.nz/file/cJgS2CRJ#d9oReFbNjdgrz99eFEJFPAv8cBRD-dbc3dDUZs2QNqo
+    汉责: https://mega.nz/file/0FgzDShJ#WG-vkbpnDDdc7XPqYALQNNV4DxUGL_OW6QC_6LKj5NM
