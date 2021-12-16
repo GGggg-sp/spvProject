@@ -21,39 +21,46 @@ def Vid2Np(vid_path: str, interval: int, resolution: (int, int)):
     vid_frames_rate = cv_vid.get(cv2.CAP_PROP_FPS)
     current_frame_idx = 1
     frame_interval = interval * vid_frames_rate
-
+    vid_np_arr = None
     is_first = True
     while True:
         cv_vid.set(1, current_frame_idx)
         # cv_vid.set(cv2.CAP_PROP_POS_MSEC, current_pos_msec)
         is_success, frame = cv_vid.read()
-
         if is_success:
             frame = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resolution)[None, :, :, :]
-
             if is_first:
                 vid_np_arr = frame
                 is_first = False
             else:
+                if vid_np_arr is None:
+                    return False, 0
                 vid_np_arr = np.concatenate((vid_np_arr, frame), axis=0)
             current_frame_idx = current_frame_idx + frame_interval
             if current_frame_idx >= vid_frames_count:
                 break
-
         else:
             break
-    return vid_np_arr
+    if vid_np_arr is None:
+        return False, 0
+    return True, vid_np_arr
+
+
 
 def ProcessLeafDir(dir_path:str, target_resolution:(int, int), target_dir:str, rela_dict:dict):
-    video_list = [vid_name for vid_name in os.listdir(dir_path) if vid_name.endswith('.mp4') or vid_name.endswith('wmv')]
+    video_list = [vid_name for vid_name in os.listdir(dir_path) if vid_name.endswith('.mp4') or vid_name.endswith('.MP4')]
     processed_vid_list = list(rela_dict.values())
+    print('{} video files in path: {}\n{} videos has been processed!'.format(len(video_list), dir_path, len(processed_vid_list)))
     for vid_file_name in video_list:
         vid_path = os.path.join(dir_path, vid_file_name)
         if vid_path in processed_vid_list:
             print('{} has been processed, skipped'.format(vid_path))
             continue
         print('Processing {}'.format(vid_path))
-        np_vid = Vid2Np(vid_path=vid_path, interval=4, resolution=target_resolution)
+        success, np_vid = Vid2Np(vid_path=vid_path, interval=4, resolution=target_resolution)
+        if not success:
+            print("{} File format error, skipped!".format(vid_path))
+            continue
         # npz_file_path = os.path.join(dir_path, vid_file_name.replace('.mp4', '.npy'))
         while True:
             npy_file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7)) + '.npy'
@@ -62,6 +69,8 @@ def ProcessLeafDir(dir_path:str, target_resolution:(int, int), target_dir:str, r
         npy_file_path = os.path.join(target_dir, npy_file_name)
         np.save(npy_file_path, np_vid)
         rela_dict[npy_file_name] = vid_path
+        with open(os.path.join(target_dir, 'rela_dict.json'), 'w') as f:
+            json.dump(rela_dict, f, indent=4)
     return
 
 
@@ -101,7 +110,8 @@ if __name__ == '__main__':
 
     ProcessRootDir(dir_path=vid_dir, if_recursive=if_recursive, target_resolution=target_resolution,
                    target_dir=target_dir, rela_dict=rela_dict)
-    with open(os.path.join(target_dir, 'rela_dict.json'), 'w') as f:
-        json.dump(rela_dict, f, indent=4)
+    # with open(os.path.join(target_dir, 'rela_dict.json'), 'w') as f:
+    #     json.dump(rela_dict, f, indent=4)
+
 
 
