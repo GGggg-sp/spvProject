@@ -19,7 +19,7 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3
     for npy_file_name in rela_dict:
         npy_file_path = os.path.join(dataset_path, npy_file_name)
         single_npy_content = np.load(npy_file_path)
-        max_ssim_single_npy = 30000
+        max_ssim_single_npy = 300000
         for i in range(0, single_npy_content.shape[0]):
             frame_ssim = ut.loss_mae(pic, single_npy_content[i, :, :, :])
             if frame_ssim < max_ssim_single_npy:
@@ -32,7 +32,7 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3
     res = ''
     for idx in range(0, topN):
         vid_path = rela_dict[sorted_similarity_list[idx][0]].split('/')
-        vid_path_to_disp = vid_path[-2] + '\t' + vid_path[-1]
+        vid_path_to_disp = vid_path[-2] + '\t' + vid_path[-1] + '\t' + str(sorted_similarity_list[idx][1])
         res = res + vid_path_to_disp + '\n'
 
     return res

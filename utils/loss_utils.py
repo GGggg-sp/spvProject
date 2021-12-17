@@ -5,7 +5,7 @@ def loss_mse(imga, imgb):
     mse = 0.0
     for chan in (0,1,2):
         (a, b) = imga[:,:,chan], imgb[:,:,chan]
-        diff = a.astype(np.int16) - b.astype(np.int16)
+        diff = a.astype(np.longlong) - b.astype(np.longlong)
         scale = a.shape[0] * a.shape[1]
         mse_s = np.sum(diff**2)/scale
         mse = mse + mse_s
