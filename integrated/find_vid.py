@@ -31,7 +31,7 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3
         single_npy_content = np.load(npy_file_path)
         max_ssim_single_npy = 30000
         for i in range(0, single_npy_content.shape[0]):
-            frame_ssim = ut.loss_mae(pic, single_npy_content[i, :, :, :])
+            frame_ssim = loss_mae(pic, single_npy_content[i, :, :, :])
             if frame_ssim < max_ssim_single_npy:
                 max_ssim_single_npy = frame_ssim
         similarity_list.append((npy_file_name, max_ssim_single_npy))
