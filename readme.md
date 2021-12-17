@@ -1,4 +1,4 @@
-# 看图识片工具人
+# 看图识片工具人 - For 404 Sanctuary & A.N.S.G & Chole's Playground
 
 根据截图搜寻到本地数据库内与截图最相似的视频
 
@@ -42,10 +42,8 @@
     --multi_datasets 指明了 dataset 目录下是否有多个数据库。若要使用多个数据库进行检索，则应当将所有数据库文件夹组织如下：
 
     dataset_total
-    |    
-    |--dataset1
-    |
-    |--dataset2
+    ├──dataset1
+    └──dataset2
     
     多数据库检索功能还未完善，目前的多数据库检索为简单地输出每个数据库中最有可能的视频信息
     
@@ -61,7 +59,6 @@
 可直接下载解压供 find_vid.py 脚本使用
 
 spanking movie jp: https://mega.nz/file/cJgS2CRJ#d9oReFbNjdgrz99eFEJFPAv8cBRD-dbc3dDUZs2QNqo
-    
 
 汉责: https://mega.nz/file/0FgzDShJ#WG-vkbpnDDdc7XPqYALQNNV4DxUGL_OW6QC_6LKj5NM
 
