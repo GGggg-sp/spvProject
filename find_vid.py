@@ -9,7 +9,7 @@ import urllib.request as request
 
 from utils.loss_utils import loss_mae
 
-def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3, pic_path_is_url:bool = False):
+def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 5, pic_path_is_url:bool = False):
     if pic_path_is_url:
         print("Loading image from url:")
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
@@ -44,7 +44,7 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3
     res = ''
     for idx in range(0, topN):
         vid_path = rela_dict[sorted_similarity_list[idx][0]].split('/')
-        vid_path_to_disp = vid_path[-2] + '\t' + vid_path[-1] + '\t' + str(sorted_similarity_list[idx][1])
+        vid_path_to_disp = str(idx + 1) + '\t' +vid_path[-2] + '\t' + vid_path[-1] + '\t' + str(sorted_similarity_list[idx][1])
         res = res + vid_path_to_disp + '\n'
 
     return res
@@ -79,9 +79,9 @@ if __name__ == '__main__':
         res = []
         for ds in ds_list:
             res.append(find_vid(pic_path=pic_path, dataset_path=ds, resolution=(160, 120), pic_path_is_url=pic_is_url))
-        [print('This video may be located in:\nDirectory:\tFile:\n' + r) for r in res]
+        [print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + r) for r in res]
     else:
         res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
-        print('This video may be located in:\nDirectory:\tFile:\n' + res)
+        print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + res)
 
 

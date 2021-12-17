@@ -62,3 +62,13 @@ spanking movie jp: https://mega.nz/file/cJgS2CRJ#d9oReFbNjdgrz99eFEJFPAv8cBRD-db
     
 
 汉责: https://mega.nz/file/0FgzDShJ#WG-vkbpnDDdc7XPqYALQNNV4DxUGL_OW6QC_6LKj5NM
+
+
+# 数据库合并
+若希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的文件以防索引出现问题
+如：
+    
+    python merge_datasets.py --original_datasets XXX_datasets --original_datasets YYY_datasets --target_dir new_dataset
+
+即将 XXX_dataset 与 YYY_dataset 进行合并，新的数据库将位于 new_dataset 位置
+可以同时合并多个数据库，只需要使用多个 --original_datasets 参数将希望合并的数据库传入即可
