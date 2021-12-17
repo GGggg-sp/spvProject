@@ -9,7 +9,7 @@ def loss_mse(imga, imgb):
         scale = a.shape[0] * a.shape[1]
         mse_s = np.sum(diff**2)/scale
         mse = mse + mse_s
-    return mse
+    return mse/3
 
 
 def loss_mae(imga, imgb):
@@ -20,7 +20,7 @@ def loss_mae(imga, imgb):
         scale = a.shape[0] * a.shape[1]
         mae_s = np.sum(np.abs(diff))/scale
         mae = mae + mae_s
-    return mae
+    return mae/3
     
     
 def loss_psnr(a, b):
@@ -47,7 +47,7 @@ def loss_ssim_rgb(imga, imgb):
 
         ssim = ssim + ((2*ua * ub + c_1) * (2 * covab_ + c_2))/((ua**2 + ub**2 + c_1) * (sigmaa + sigmab + c_2))
 
-    return ssim
+    return ssim/3
 
 
 
