@@ -1,14 +1,23 @@
 import numpy as np
 import argparse
 import os
-import pickle
+
 import json
 import cv2
+from urllib.request import urlopen
 
 import utils.loss_utils as ut
 
-def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3):
-    pic = cv2.imread(pic_path)
+def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3, pic_path_is_url:bool = False):
+    if pic_path_is_url:
+        print("Loading image from url:")
+        req = urlopen(pic_path)
+        image = np.asarray(bytearray(req.read()), dtype='uint8')
+        pic = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        print("Image loaded!")
+    else:
+        pic = cv2.imread(pic_path)
+
     pic = cv2.resize(pic, resolution)
 
     json_file_path = os.path.join(dataset_path, 'rela_dict.json')
@@ -52,22 +61,24 @@ if __name__ == '__main__':
     argparser.add_argument('dataset', help='Dataset location')
     argparser.add_argument('--multi_datasets', help='If the dataset location contains more than one dataset folder',
                            action='store_true')
+    argparser.add_argument('--pic_is_url', help='Use this flag when the picture is a URL', action='store_true')
 
     args = argparser.parse_args()
     pic_path = args.picture
     dataset_path = args.dataset
     is_multi_datasets = args.multi_datasets
+    pic_is_url = args.pic_is_url
     assert os.path.isdir(dataset_path)
-    assert os.path.isfile(pic_path)
+    # assert os.path.isfile(pic_path)
 
     if is_multi_datasets:
         ds_list = [os.path.join(dataset_path, ds) for ds in os.listdir(dataset_path) if os.path.isdir(ds)]
         res = []
         for ds in ds_list:
-            res.append(find_vid(pic_path=pic_path, dataset_path=ds, resolution=(160, 120)))
+            res.append(find_vid(pic_path=pic_path, dataset_path=ds, resolution=(160, 120), pic_path_is_url=pic_is_url))
         [print('This video may be located in:\nDirectory:\tFile:\n' + r) for r in res]
     else:
-        res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120))
+        res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
         print('This video may be located in:\nDirectory:\tFile:\n' + res)
 
 
