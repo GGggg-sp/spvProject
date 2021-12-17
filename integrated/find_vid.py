@@ -17,32 +17,43 @@ def loss_mae(imga, imgb):
 
 
 
-def find_vid(pic_path:str, dataset_path:str, resolution:(int, int)):
+def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3):
     pic = cv2.imread(pic_path)
     pic = cv2.resize(pic, resolution)
 
     json_file_path = os.path.join(dataset_path, 'rela_dict.json')
     with open(json_file_path, 'r') as f:
         rela_dict = json.load(f)
-    max2_ssim = [30000, '']
+    # max2_ssim = [30000, '']
+    similarity_list = []
     for npy_file_name in rela_dict:
         npy_file_path = os.path.join(dataset_path, npy_file_name)
         single_npy_content = np.load(npy_file_path)
         max_ssim_single_npy = 30000
         for i in range(0, single_npy_content.shape[0]):
-            frame_ssim = loss_mae(pic, single_npy_content[i, :, :, :])
+            frame_ssim = ut.loss_mae(pic, single_npy_content[i, :, :, :])
             if frame_ssim < max_ssim_single_npy:
                 max_ssim_single_npy = frame_ssim
-        if max_ssim_single_npy < max2_ssim[0]:
-            max2_ssim[0] = max_ssim_single_npy
-            max2_ssim[1] = npy_file_name
-    if max2_ssim[1] != '':
-        # print(max2_ssim[0])
-        vid_path = rela_dict[max2_ssim[1]].split('/')
+        similarity_list.append((npy_file_name, max_ssim_single_npy))
+        # if max_ssim_single_npy < max2_ssim[0]:
+        #     max2_ssim[0] = max_ssim_single_npy
+        #     max2_ssim[1] = npy_file_name
+    sorted_similarity_list = sorted(similarity_list, key=lambda x:x[1], reverse=False)[:topN]
+    res = ''
+    for idx in range(0, topN):
+        vid_path = rela_dict[sorted_similarity_list[idx][0]].split('/')
         vid_path_to_disp = vid_path[-2] + '\t' + vid_path[-1]
-        return vid_path_to_disp
-    else:
-        return 'No video found! '
+        res = res + vid_path_to_disp + '\n'
+
+    return res
+    # if max2_ssim[1] != '':
+    #     # print(max2_ssim[0])
+    #     vid_path = rela_dict[max2_ssim[1]].split('/')
+    #     vid_path_to_disp = vid_path[-2] + '\t' + vid_path[-1]
+    #     return vid_path_to_disp
+    # else:
+    #     return 'No video found! '
+
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
