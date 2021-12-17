@@ -6,6 +6,7 @@ import cv2
 from urllib.request import urlopen
 import urllib.request as request
 
+
 def loss_mae(imga, imgb):
     mae = 0.0
     for chan in (0, 1, 2):
@@ -15,7 +16,6 @@ def loss_mae(imga, imgb):
         mae_s = np.sum(np.abs(diff)) / scale
         mae = mae + mae_s
     return mae/3
-
 
 
 def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 5, pic_path_is_url:bool = False):

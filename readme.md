@@ -1,12 +1,12 @@
-## 看图识片工具人
+# 看图识片工具人
 
 根据截图搜寻到本地数据库内与截图最相似的视频
 
 
 
-### 典型用法介绍
+## 典型用法介绍
 
-#### 首先使用 preprocessing 脚本生成某一文件夹内视频文件的数据库
+### 首先使用 preprocessing 脚本生成某一文件夹内视频文件的数据库
 例：
     
     python preprocessing videos/handuty/ --target_dir dataset/ --recursive
@@ -25,7 +25,7 @@
 
 这些参数可通过 python preprocessing --help 来查看
 
-#### 之后使用 find_my 脚本在数据库中搜寻某一截图
+### 之后使用 find_my 脚本在数据库中搜寻某一截图
 
 例：
     
@@ -41,21 +41,23 @@
 
     --multi_datasets 指明了 dataset 目录下是否有多个数据库。若要使用多个数据库进行检索，则应当将所有数据库文件夹组织如下：
 
-    ----dataset_total
-        |
-    --------dataset1
-        |
-    --------dataset2
+    dataset_total
+    |    
+    |--dataset1
+    |
+    |--dataset2
     
     多数据库检索功能还未完善，目前的多数据库检索为简单地输出每个数据库中最有可能的视频信息
     
-# 需要的 python 库
+## 需要的 python 库
     opencv-python, numpy
 
-# 注意：
+## 注意：
 很多视频文件可能由于年代久远以及在不同软件中往复辗转，编码会出现问题（尤其尤其尤其是 wmv 文件），因此无法生成正常的数据库，目前没有好的解决办法
 
-# 已生成的数据库
+尽可能将这类文件通过 ffmpeg 重新编码后转存为 mp4 文件
+
+## 已生成的数据库
 可直接下载解压供 find_vid.py 脚本使用
 
 spanking movie jp: https://mega.nz/file/cJgS2CRJ#d9oReFbNjdgrz99eFEJFPAv8cBRD-dbc3dDUZs2QNqo
@@ -64,7 +66,7 @@ spanking movie jp: https://mega.nz/file/cJgS2CRJ#d9oReFbNjdgrz99eFEJFPAv8cBRD-db
 汉责: https://mega.nz/file/0FgzDShJ#WG-vkbpnDDdc7XPqYALQNNV4DxUGL_OW6QC_6LKj5NM
 
 
-# 数据库合并
+## 数据库合并
 若希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的文件以防索引出现问题
 如：
     
