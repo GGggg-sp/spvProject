@@ -5,13 +5,16 @@ import os
 import json
 import cv2
 from urllib.request import urlopen
+import urllib.request as request
 
-import utils.loss_utils as ut
+from utils.loss_utils import loss_mae
 
 def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3, pic_path_is_url:bool = False):
     if pic_path_is_url:
         print("Loading image from url:")
-        req = urlopen(pic_path)
+        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+        req_h = request.Request(url=pic_path, headers=headers)
+        req = urlopen(req_h)
         image = np.asarray(bytearray(req.read()), dtype='uint8')
         pic = cv2.imdecode(image, cv2.IMREAD_COLOR)
         print("Image loaded!")
@@ -30,7 +33,7 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3
         single_npy_content = np.load(npy_file_path)
         max_ssim_single_npy = 300000
         for i in range(0, single_npy_content.shape[0]):
-            frame_ssim = ut.loss_mae(pic, single_npy_content[i, :, :, :])
+            frame_ssim = loss_mae(pic, single_npy_content[i, :, :, :])
             if frame_ssim < max_ssim_single_npy:
                 max_ssim_single_npy = frame_ssim
         similarity_list.append((npy_file_name, max_ssim_single_npy))

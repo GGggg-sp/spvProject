@@ -4,6 +4,7 @@ import os
 import json
 import cv2
 from urllib.request import urlopen
+import urllib.request as request
 
 def loss_mae(imga, imgb):
     mae = 0.0
@@ -20,7 +21,9 @@ def loss_mae(imga, imgb):
 def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 3, pic_path_is_url:bool = False):
     if pic_path_is_url:
         print("Loading image from url:")
-        req = urlopen(pic_path)
+        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+        req_h = request.Request(url=pic_path, headers=headers)
+        req = urlopen(req_h)
         image = np.asarray(bytearray(req.read()), dtype='uint8')
         pic = cv2.imdecode(image, cv2.IMREAD_COLOR)
         print("Image loaded!")
