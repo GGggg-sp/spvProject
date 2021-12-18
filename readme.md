@@ -32,7 +32,7 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 
 该步骤会生成 pkl 结尾的 hash 表文件，搜索截图时，使用的即是此文件
 
-### 之后使用 find_my 脚本在数据库中搜寻某一截图
+### 之后使用 find_vid_hash 脚本在数据库中搜寻某一截图
 
 例：
     
@@ -40,7 +40,7 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 
 将在 dataset 文件夹内的所有以 pkl 结尾的文件数据库中搜寻 test.jpg 图像所属的视频
 
-    python find_vid.py <picture> <dataset> 
+    python find_vid_hash.py <picture> <dataset> 
 
     picture 为要搜寻的截图所在位置
 
@@ -60,7 +60,7 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 
 
 ## 数据库合并
-若没有计算 hash 表：希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的npy文件以防索引出现问题
+若还未计算 hash 表：希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的npy文件以防索引出现问题
 如：
     
     python merge_datasets.py --original_datasets XXX_datasets --original_datasets YYY_datasets --target_dir new_dataset
