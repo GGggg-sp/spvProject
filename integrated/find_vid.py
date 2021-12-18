@@ -17,9 +17,12 @@ def loss_mae(imga, imgb):
         mae = mae + mae_s
     return mae/3
 
-
-def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 5, pic_path_is_url:bool = False):
-    if pic_path_is_url:
+def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120), topN:int = 5, pic_path_is_url:bool = False,
+             pic_bytecontent = None):
+    if pic_bytecontent:
+        image = np.asarray(bytearray(pic_bytecontent), dtype='uint8')
+        pic = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    elif pic_path_is_url:
         print("Loading image from url:")
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         req_h = request.Request(url=pic_path, headers=headers)
@@ -30,12 +33,12 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 5
     else:
         pic = cv2.imread(pic_path)
 
+    pic = cv2.cvtColor(pic, cv2.COLOR_BGR2RGB)
     pic = cv2.resize(pic, resolution)
 
     json_file_path = os.path.join(dataset_path, 'rela_dict.json')
     with open(json_file_path, 'r') as f:
         rela_dict = json.load(f)
-    # max2_ssim = [30000, '']
     similarity_list = []
     for npy_file_name in rela_dict:
         npy_file_path = os.path.join(dataset_path, npy_file_name)
@@ -46,9 +49,6 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 5
             if frame_ssim < max_ssim_single_npy:
                 max_ssim_single_npy = frame_ssim
         similarity_list.append((npy_file_name, max_ssim_single_npy))
-        # if max_ssim_single_npy < max2_ssim[0]:
-        #     max2_ssim[0] = max_ssim_single_npy
-        #     max2_ssim[1] = npy_file_name
     sorted_similarity_list = sorted(similarity_list, key=lambda x:x[1], reverse=False)[:topN]
     res = ''
     for idx in range(0, topN):
@@ -92,3 +92,4 @@ if __name__ == '__main__':
     else:
         res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
         print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + res)
+

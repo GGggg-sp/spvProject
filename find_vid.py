@@ -26,12 +26,12 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120),
     else:
         pic = cv2.imread(pic_path)
 
+    pic = cv2.cvtColor(pic, cv2.COLOR_BGR2RGB)
     pic = cv2.resize(pic, resolution)
 
     json_file_path = os.path.join(dataset_path, 'rela_dict.json')
     with open(json_file_path, 'r') as f:
         rela_dict = json.load(f)
-    # max2_ssim = [30000, '']
     similarity_list = []
     for npy_file_name in rela_dict:
         npy_file_path = os.path.join(dataset_path, npy_file_name)
@@ -42,9 +42,6 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120),
             if frame_ssim < max_ssim_single_npy:
                 max_ssim_single_npy = frame_ssim
         similarity_list.append((npy_file_name, max_ssim_single_npy))
-        # if max_ssim_single_npy < max2_ssim[0]:
-        #     max2_ssim[0] = max_ssim_single_npy
-        #     max2_ssim[1] = npy_file_name
     sorted_similarity_list = sorted(similarity_list, key=lambda x:x[1], reverse=False)[:topN]
     res = ''
     for idx in range(0, topN):
