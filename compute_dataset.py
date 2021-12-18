@@ -49,7 +49,12 @@ def compute_database(database_dir:str):
 
 
 if __name__ == '__main__':
-    compute_database('/Volumes/ExtremeSSD/spm_dataset')
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('dataset')
+    args = argparser.parse_args()
+    dataset_dir = args.dataset
+    compute_database(dataset_dir)
+
 
 # img1 = cv2.imread('test_imgs/1.png')
 # img2 = cv2.imread('test_imgs/3.png')

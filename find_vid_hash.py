@@ -62,9 +62,14 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120),
 
     pic_hash, _ = phash_c(pic)
 
-    pkl_file_path = os.path.join(dataset_path, 'hash_tabel.pkl')
-    with open(pkl_file_path, 'rb') as f:
-        phash_table = pk.load(f)
+    # pkl_file_path = os.path.join(dataset_path, 'hash_tabel.pkl')
+    pkl_file_path_list = [i for i in os.listdir(dataset_path) if i.endswith('.pkl')]
+    phash_table = {}
+    for pkl_file_name in pkl_file_path_list:
+        pkl_file_path = os.path.join(dataset_path, pkl_file_name)
+        with open(pkl_file_path, 'rb') as f:
+            phash_table_t = pk.load(f)
+            phash_table.update(phash_table_t)
     hamming_dist_list = []
     for vid_path in phash_table:
         phash_list_for_sigle_vid = phash_table[vid_path]
@@ -81,9 +86,9 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120),
     res = ''
     for idx in range(0, topN):
         vid_path = sorted_similarity_list[idx][0].split('/')
-        vid_path_to_disp = str(idx + 1) + '\t' +vid_path[-2] + '\t' + vid_path[-1] + '\t' + str(sorted_similarity_list[idx][1])
+        vid_path_to_disp = str(idx + 1) + '\t' +vid_path[-2] + '\t' + vid_path[-1]  # +'\t' + str(sorted_similarity_list[idx][1])
         vid_time = datetime.timedelta(seconds=sorted_similarity_list[idx][2] * 4)
-        res = res + vid_path_to_disp + '    @{}\n'.format(vid_time)
+        res = res + vid_path_to_disp + '\t    @{}\n'.format(vid_time)
 
     return res
 
@@ -93,26 +98,26 @@ if __name__ == '__main__':
 
     argparser.add_argument('picture', help='Picture to find')
     argparser.add_argument('dataset', help='Dataset location')
-    argparser.add_argument('--multi_datasets', help='If the dataset location contains more than one dataset folder',
-                           action='store_true')
+    # argparser.add_argument('--multi_datasets', help='If the dataset location contains more than one dataset folder',
+    #                        action='store_true')
     argparser.add_argument('--pic_is_url', help='Use this flag when the picture is a URL', action='store_true')
 
     args = argparser.parse_args()
     pic_path = args.picture
     dataset_path = args.dataset
-    is_multi_datasets = args.multi_datasets
+    # is_multi_datasets = args.multi_datasets
     pic_is_url = args.pic_is_url
     assert os.path.isdir(dataset_path)
     # assert os.path.isfile(pic_path)
 
-    if is_multi_datasets:
-        ds_list = [os.path.join(dataset_path, ds) for ds in os.listdir(dataset_path) if os.path.isdir(ds)]
-        res = []
-        for ds in ds_list:
-            res.append(find_vid(pic_path=pic_path, dataset_path=ds, resolution=(160, 120), pic_path_is_url=pic_is_url))
-        [print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + r) for r in res]
-    else:
-        res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
-        print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + res)
+    # if is_multi_datasets:
+    #     ds_list = [os.path.join(dataset_path, ds) for ds in os.listdir(dataset_path) if os.path.isdir(ds)]
+    #     res = []
+    #     for ds in ds_list:
+    #         res.append(find_vid(pic_path=pic_path, dataset_path=ds, resolution=(160, 120), pic_path_is_url=pic_is_url))
+    #     [print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + r) for r in res]
+    # else:
+    res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
+    print('This video may be located in:\nIndex:\tDirectory:\tFile:\n' + res)
 
 

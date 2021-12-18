@@ -26,28 +26,26 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 
 这些参数可通过 python preprocessing --help 来查看
 
+### 然后计算该数据库的 hash 表
+
+    python compute_dataset dataset/
+
+该步骤会生成 pkl 结尾的 hash 表文件，搜索截图时，使用的即是此文件
+
 ### 之后使用 find_my 脚本在数据库中搜寻某一截图
 
 例：
     
-    python find_vid.py test.jpg dataset/ 
+    python find_vid_hash.py test.jpg dataset/ 
 
-将在 dataset 文件夹内的数据库中搜寻 test.jpg 图像所属的视频
+将在 dataset 文件夹内的所有以 pkl 结尾的文件数据库中搜寻 test.jpg 图像所属的视频
 
-    python find_vid.py <picture> <dataset> --multi_datasets
+    python find_vid.py <picture> <dataset> 
 
     picture 为要搜寻的截图所在位置
 
     dataset 为数据库所在位置
 
-    --multi_datasets 指明了 dataset 目录下是否有多个数据库。若要使用多个数据库进行检索，则应当将所有数据库文件夹组织如下：
-
-    dataset_total
-    ├──dataset1
-    └──dataset2
-    
-    多数据库检索功能还未完善，目前的多数据库检索为简单地输出每个数据库中最有可能的视频信息
-    
 ## 需要的 python 库
     opencv-python, numpy
 
@@ -57,18 +55,17 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 尽可能将这类文件通过 ffmpeg 重新编码后转存为 mp4 文件
 
 ## 已生成的数据库
-可直接下载解压供 find_vid.py 脚本使用
+该数据库包含了 汉责，茉莉，handspanking 以及 spanking movie jp 的内容，可直接下载解压供 find_vid_hash.py 脚本使用
 
-spanking movie jp: https://mega.nz/file/cJgS2CRJ#d9oReFbNjdgrz99eFEJFPAv8cBRD-dbc3dDUZs2QNqo
-
-汉责: https://mega.nz/file/0FgzDShJ#WG-vkbpnDDdc7XPqYALQNNV4DxUGL_OW6QC_6LKj5NM
 
 
 ## 数据库合并
-若希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的文件以防索引出现问题
+若没有计算 hash 表：希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的npy文件以防索引出现问题
 如：
     
     python merge_datasets.py --original_datasets XXX_datasets --original_datasets YYY_datasets --target_dir new_dataset
 
 即将 XXX_dataset 与 YYY_dataset 进行合并，新的数据库将位于 new_dataset 位置
 可以同时合并多个数据库，只需要使用多个 --original_datasets 参数将希望合并的数据库传入即可
+
+若已计算 hash 表：直接复制对应的 pkl 文件到目标目录中即可

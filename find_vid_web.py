@@ -8,13 +8,13 @@ from find_vid_hash import find_vid
 dataset_path = ''
 def web_server():
     while True:
-        wio.output.put_text('茉莉系列视频查找')
+        wio.output.put_text('汉责，茉莉，handspanking, spanking movie jp 系列视频查找')
         img = wio.input.file_upload('上传截图: ', accept='image/*', max_size='10M')
         if not img:
             continue
         wio.output.put_text('Finding videos ...')
         res = find_vid('', dataset_path=dataset_path, pic_bytecontent=img['content'])
-        wio.output.put_text('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + res)
+        wio.output.put_text('This video may be located in:\nIndex:\tDirectory:\tFile:\n' + res)
 
 
 if __name__ == '__main__':
