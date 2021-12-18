@@ -84,6 +84,9 @@ if __name__ == '__main__':
         [print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + r) for r in res]
     else:
         res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
-        print('This video may be located in:\nIndex:\tDirectory:\tFile:\tError(lower is better):\n' + res)
+        print('spm-mp4 为 spanking movie jp\nmicro-videos, micro-films为汉责视频\nChinses Spanking 为茉莉视频\n')
+        print('该视频可能是下列视频中的一个 in:\n序号:\t所属目录:\t视频名称: （从上往下可能性依次递减）\n' + res)
+
+
 
 
