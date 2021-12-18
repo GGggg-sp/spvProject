@@ -3,7 +3,7 @@ import pywebio as wio
 import argparse
 import os
 
-from find_vid import find_vid
+from find_vid_hash import find_vid
 
 dataset_path = ''
 def web_server():
