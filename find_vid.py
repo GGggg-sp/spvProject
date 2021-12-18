@@ -9,8 +9,13 @@ import urllib.request as request
 
 from utils.loss_utils import loss_mae
 
-def find_vid(pic_path:str, dataset_path:str, resolution:(int, int), topN:int = 5, pic_path_is_url:bool = False):
-    if pic_path_is_url:
+
+def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120), topN:int = 5, pic_path_is_url:bool = False,
+             pic_bytecontent = None):
+    if pic_bytecontent:
+        image = np.asarray(bytearray(pic_bytecontent), dtype='uint8')
+        pic = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    elif pic_path_is_url:
         print("Loading image from url:")
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         req_h = request.Request(url=pic_path, headers=headers)
