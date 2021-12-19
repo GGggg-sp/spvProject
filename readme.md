@@ -54,10 +54,6 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 
 尽可能将这类文件通过 ffmpeg 重新编码后转存为 mp4 文件
 
-## 已生成的数据库
-该数据库包含了 汉责，茉莉，handspanking 以及 spanking movie jp 的内容，可直接下载解压供 find_vid_hash.py 脚本使用
-
-
 
 ## 数据库合并
 若还未计算 hash 表：希望合并多个现有数据库到新的数据库中，可使用 merge_datasets.py 脚本，不可直接复制粘贴数据库中的npy文件以防索引出现问题
