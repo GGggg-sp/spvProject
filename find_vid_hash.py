@@ -83,13 +83,17 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120),
         hamming_dist_list.append((vid_path, most_sim_frame_hash, most_sim_frame_idx))
 
     sorted_similarity_list = sorted(hamming_dist_list, key=lambda x:x[1], reverse=False)[:topN]
-    res = ''
+    res = []
     for idx in range(0, topN):
         vid_path = sorted_similarity_list[idx][0].split('/')
-        vid_path_to_disp = str(idx + 1) + '\t' +vid_path[-2] + '\t' + vid_path[-1]  # +'\t' + str(sorted_similarity_list[idx][1])
         vid_time = datetime.timedelta(seconds=sorted_similarity_list[idx][2] * 4)
-        res = res + vid_path_to_disp + '\t    @{}\n'.format(vid_time)
-
+        # vid_list = [str(idx + 1), +vid_path[-2], vid_path[-1] ] # +'\t' + str(sorted_similarity_list[idx][1])
+        # res = res + vid_path_to_disp + '\t    @ {}\n'.format(vid_time)
+        res.append({'vid_index': idx + 1,
+                    'vid_folder': vid_path[-2],
+                    'vid_name': vid_path[-1],
+                    'vid_timestamp': vid_time,
+                    'hamming_dist': sorted_similarity_list[idx][1]})
     return res
 
 
@@ -119,6 +123,11 @@ if __name__ == '__main__':
     # else:
     res = find_vid(pic_path=pic_path, dataset_path=dataset_path, resolution=(160, 120), pic_path_is_url=pic_is_url)
     print('spm-mp4 为 spanking movie jp\nmicro-videos, micro-films为汉责视频\nChinses Spanking 为茉莉视频\n')
-    print('该视频可能是下列视频中的一个 in:\n序号:\t所属目录:\t视频名称: （从上往下可能性依次递减）\n' + res)
+    print('该视频可能是下列视频中的一个 in:\n序号:\t所属目录:\t视频名称: （从上往下可能性依次递减）\n')
+    for itm in res:
+        print(str(itm['vid_index']) + '\t' +
+              itm['vid_folder'] + '\t' +
+              itm['vid_name'] + '\t' +
+              '@ ' + itm['vid_timestamp' + '\n'])
 
 
