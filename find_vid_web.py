@@ -19,7 +19,8 @@ def web_server():
         # wio.output.put_text('该视频可能是下列视频中的一个:\n序号:\t所属目录:\t视频名称: （从上往下可能性依次递减）\n' + res)
         wio.output.put_image(bytearray(img['content']))
         wio.output.put_text('该视频可能是下列视频中的某一个（从上往下可能性依次递减）:')
-        wio.output.put_table(res, header=[('序号','vid_index'), ('目录','vid_folder'), ('视频名称','vid_name'), ('时间点', 'vid_timestamp')])
+        wio.output.put_table(res, header=[('序号','vid_index'), ('目录','vid_folder'), ('视频名称','vid_name'),
+                                          ('时间点', 'vid_timestamp'), ('误差程度', 'hamming_dist')])
 
 
 

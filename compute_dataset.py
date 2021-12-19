@@ -23,11 +23,6 @@ def phash(img):
     return (hash, hash_str)
 
 
-def hamming_distance(hash1, hash2):
-    # return sum(elm1 != elm2 for elm1, elm2 in zip(hash1, hash2))
-    return np.count_nonzero(hash1 != hash2)
-
-
 def compute_database(database_dir:str):
     rela_dict_path = os.path.join(database_dir, 'rela_dict.json')
     with open(rela_dict_path, 'r') as f:

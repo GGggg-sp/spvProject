@@ -37,7 +37,15 @@ def phash_c(img):
 
 def hamming_distance(hash1, hash2):
     # return sum(elm1 != elm2 for elm1, elm2 in zip(hash1, hash2))
-    return np.count_nonzero(hash1 != hash2)
+    length = hash1.shape[0]
+    diff = hash1 != hash2
+    num_seg = 4
+    seg_length = int(np.floor(length/num_seg))
+    hd = 0
+    for seg in range(1, num_seg+1):
+        hd += np.count_nonzero(diff[0:(seg*seg_length)])
+    return hd
+    # return np.count_nonzero(hash1 != hash2) + np.count_nonzero(hash1[1:half_length] != hash2[1:half_length])
 
 
 
