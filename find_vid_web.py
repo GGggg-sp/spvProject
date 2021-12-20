@@ -8,7 +8,7 @@ from find_vid_hash import find_vid
 dataset_path = ''
 def web_server():
     while True:
-        wio.output.put_text('汉责，茉莉，Handspanking, Spanking Movie jp 系列视频及日本部分影片查找')
+        wio.output.put_text('汉责，茉莉，Handspanking, Spanking Movie jp, Lupus, NuWest系列视频日本部分影片查找')
         wio.output.put_text('仅在避难所测试使用')
         img = wio.input.file_upload('上传截图: ', accept='image/*', max_size='10M')
         if not img:
