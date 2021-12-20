@@ -46,6 +46,7 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 
     dataset 为数据库所在位置
 
+该脚本可以接受一个URL 作为文件输入，此时应带上 --pic_is_url 选项
 ## 需要的 python 库
     opencv-python, numpy
 
