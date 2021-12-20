@@ -65,3 +65,11 @@ _**For 404 Sanctuary & A.N.S.G & Chole's Playground**_
 可以同时合并多个数据库，只需要使用多个 --original_datasets 参数将希望合并的数据库传入即可
 
 若已计算 hash 表：直接复制对应的 pkl 文件到目标目录中即可
+
+## 数据库敏感路径删除
+我们所得到的 pkl 数据库中的路径很多情况下为绝对路径，即有可能包含了其上层目录结构的信息。若
+要删除这些信息，只保留两层路径（即视频文件所在目录以及视频文件名称），可使用 remove_sens_info 脚本
+
+    python remove_sense_info.py your_dataset new_dataset
+
+即可将脱敏后的数据库生成在 new_dataset 位置
