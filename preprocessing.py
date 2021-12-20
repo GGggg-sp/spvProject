@@ -10,12 +10,15 @@ import string
 import json
 
 
-def ProcessLeafDir(dir_path:str, target_resolution:(int, int), target_dir:str, rela_dict:dict):
-    video_list = [vid_name for vid_name in os.listdir(dir_path) if vid_name.endswith('.mp4') or vid_name.endswith('.MP4')
-                  or vid_name.endswith('.wmv') or vid_name.endswith('.mkv') or vid_name.endswith('.mpg') or vid_name.endswith('.rm')
-                  or vid_name.endswith('.avi') or vid_name.endswith('.asf') or vid_name.endswith('.rmvb')]
+def ProcessLeafDir(dir_path: str, target_resolution: (int, int), target_dir: str, rela_dict: dict):
+    # video_list = [vid_name for vid_name in os.listdir(dir_path) if vid_name.endswith('.mp4') or vid_name.endswith('.MP4')
+    #               or vid_name.endswith('.wmv') or vid_name.endswith('.mkv') or vid_name.endswith('.mpg') or vid_name.endswith('.rm')
+    #               or vid_name.endswith('.avi') or vid_name.endswith('.asf') or vid_name.endswith('.rmvb')]
+    video_list = [vid_name for vid_name in os.listdir(dir_path) if
+                  vid_name.endswith(('.mp4', '.MP4', '.wmv', '.mkv', '.mpg', '.rm', '.avi', '.asf', '.rmvb'))]
     processed_vid_list = list(rela_dict.values())
-    print('{} video files in path: {}\n{} videos has been processed!'.format(len(video_list), dir_path, len(processed_vid_list)))
+    print('{} video files in path: {}\n{} videos has been processed!'.format(len(video_list), dir_path,
+                                                                             len(processed_vid_list)))
     for vid_file_name in video_list:
         vid_path = os.path.join(dir_path, vid_file_name)
         if vid_path in processed_vid_list:
@@ -39,14 +42,14 @@ def ProcessLeafDir(dir_path:str, target_resolution:(int, int), target_dir:str, r
     return
 
 
-def ProcessRootDir(dir_path: str, if_recursive: bool, target_resolution:(int, int), target_dir:str, rela_dict:dict):
+def ProcessRootDir(dir_path: str, if_recursive: bool, target_resolution: (int, int), target_dir: str, rela_dict: dict):
     ProcessLeafDir(dir_path=dir_path, target_resolution=target_resolution, target_dir=target_dir, rela_dict=rela_dict)
     if if_recursive:
         dir_list = [dirp for dirp in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, dirp))]
         if len(dir_list) > 0:
             for dirp in dir_list:
                 ProcessRootDir(dir_path=os.path.join(dir_path, dirp), if_recursive=True,
-                               target_resolution=target_resolution,target_dir=target_dir, rela_dict=rela_dict)
+                               target_resolution=target_resolution, target_dir=target_dir, rela_dict=rela_dict)
 
 
 if __name__ == '__main__':
@@ -77,5 +80,3 @@ if __name__ == '__main__':
                    target_dir=target_dir, rela_dict=rela_dict)
     # with open(os.path.join(target_dir, 'rela_dict.json'), 'w') as f:
     #     json.dump(rela_dict, f, indent=4)
-
-
