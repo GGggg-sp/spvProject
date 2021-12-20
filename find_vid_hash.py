@@ -39,7 +39,7 @@ def hamming_distance(hash1, hash2):
     # return sum(elm1 != elm2 for elm1, elm2 in zip(hash1, hash2))
     length = hash1.shape[0]
     diff = hash1 != hash2
-    num_seg = 2
+    num_seg = 4
     seg_length = int(np.floor(length/num_seg))
     hd = 0
     for seg in range(1, num_seg+1):
