@@ -15,7 +15,7 @@ def ProcessLeafDir(dir_path: str, target_resolution: (int, int), target_dir: str
     #               or vid_name.endswith('.wmv') or vid_name.endswith('.mkv') or vid_name.endswith('.mpg') or vid_name.endswith('.rm')
     #               or vid_name.endswith('.avi') or vid_name.endswith('.asf') or vid_name.endswith('.rmvb')]
     video_list = [vid_name for vid_name in os.listdir(dir_path) if
-                  vid_name.endswith(('.mp4', '.MP4', '.wmv', '.mkv', '.mpg', '.rm', '.avi', '.asf', '.rmvb'))]
+                  vid_name.endswith(('.mp4', '.MP4', '.wmv', '.mkv', '.mpg', '.rm', '.avi', '.asf', '.rmvb', '.flv', '.m4v'))]
     processed_vid_list = list(rela_dict.values())
     print('{} video files in path: {}\n{} videos has been processed!'.format(len(video_list), dir_path,
                                                                              len(processed_vid_list)))
