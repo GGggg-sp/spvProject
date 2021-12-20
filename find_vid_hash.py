@@ -8,22 +8,23 @@ from urllib.request import urlopen
 import urllib.request as request
 import datetime
 
+
 def loss_mae(imga, imgb):
     mae = 0.0
-    for chan in (0,1,2):
-        (a, b) = imga[:,:,chan], imgb[:,:,chan]
+    for chan in (0, 1, 2):
+        (a, b) = imga[:, :, chan], imgb[:, :, chan]
         diff = a.astype(np.int16) - b.astype(np.int16)
         scale = a.shape[0] * a.shape[1]
-        mae_s = np.sum(np.abs(diff))/scale
+        mae_s = np.sum(np.abs(diff)) / scale
         mae = mae + mae_s
-    return mae/3
+    return mae / 3
 
 
 def phash_c(img):
     hash_size = 8
     highfreq_factor = 4
     img_size = hash_size * highfreq_factor
-    imgp = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)/255.0
+    imgp = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY) / 255.0
     dct = cv2.dct(cv2.resize(imgp, (img_size, img_size)))
     dctlowfreq = dct[:hash_size, :hash_size]
     med = np.median(dctlowfreq)
@@ -40,23 +41,23 @@ def hamming_distance(hash1, hash2):
     length = hash1.shape[0]
     diff = hash1 != hash2
     num_seg = 4
-    seg_length = int(np.floor(length/num_seg))
+    seg_length = int(np.floor(length / num_seg))
     hd = 0
-    for seg in range(1, num_seg+1):
-        hd += np.count_nonzero(diff[0:(seg*seg_length)])
+    for seg in range(1, num_seg + 1):
+        hd += np.count_nonzero(diff[0:(seg * seg_length)])
     return hd
     # return np.count_nonzero(hash1 != hash2) + np.count_nonzero(hash1[1:half_length] != hash2[1:half_length])
 
 
-
-def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120), topN:int = 5, pic_path_is_url:bool = False,
-             pic_bytecontent = None):
+def find_vid(pic_path: str, dataset_path: str, resolution: (int, int) = (160, 120), topN: int = 5,
+             pic_path_is_url: bool = False,
+             pic_bytecontent=None):
     if pic_bytecontent:
         image = np.asarray(bytearray(pic_bytecontent), dtype='uint8')
         pic = cv2.imdecode(image, cv2.IMREAD_COLOR)
     elif pic_path_is_url:
         print("Loading image from url:")
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         req_h = request.Request(url=pic_path, headers=headers)
         req = urlopen(req_h)
         image = np.asarray(bytearray(req.read()), dtype='uint8')
@@ -90,7 +91,7 @@ def find_vid(pic_path:str, dataset_path:str, resolution:(int, int) = (160, 120),
                 most_sim_frame_idx = idx
         hamming_dist_list.append((vid_path, most_sim_frame_hash, most_sim_frame_idx))
 
-    sorted_similarity_list = sorted(hamming_dist_list, key=lambda x:x[1], reverse=False)[:topN]
+    sorted_similarity_list = sorted(hamming_dist_list, key=lambda x: x[1], reverse=False)[:topN]
     res = []
     for idx in range(0, topN):
         vid_path = sorted_similarity_list[idx][0].split('/')
@@ -137,5 +138,3 @@ if __name__ == '__main__':
               itm['vid_folder'] + '\t' +
               itm['vid_name'] + '\t' +
               '@ ' + itm['vid_timestamp' + '\n'])
-
-
