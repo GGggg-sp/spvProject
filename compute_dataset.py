@@ -14,7 +14,7 @@ def remove_black_border(img):
     rgb_sum = np.sum(img, axis=2)
     row_sum = np.sum(rgb_sum, axis=1)
     index = np.where(row_sum > row_threshold)[0]
-    if index[0] > border_height_threshhold:
+    if index.shape[0] > 0 and index[0] > border_height_threshhold:
         if np.abs(index[0] - (height - index[-1])) < 6:
             new_image = img[index[0]:index[-1], :, :]
             new_image = cv2.resize(new_image, (width, height))
