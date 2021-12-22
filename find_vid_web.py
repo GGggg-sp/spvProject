@@ -10,7 +10,7 @@ def web_server():
     wio.session.set_env(title='404 sp video finder')
     while True:
         wio.output.put_text('汉责, 茉莉, Handspanking, Spanking Movie jp, Lupus, NuWest, Spanked in uniform, GBS, '
-                            'Shadow Lane系列视频日本部分影片查找')
+                            'Shadow Lane, Cutie spankee, Northern spanking系列视频及日本部分影片查找')
         # wio.output.put_text('仅在避难所测试使用')
         img = wio.input.file_upload('上传截图: ', accept='image/*', max_size='10M')
         if not img:
