@@ -3,4 +3,5 @@
 *.npy
 .DS_Store
 *.xml
-.idea/*
+.idea/
+test_imgs/
