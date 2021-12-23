@@ -3,6 +3,4 @@
 *.npy
 .DS_Store
 *.xml
-*.xml
-*.xml
 .idea/deployment.xml
