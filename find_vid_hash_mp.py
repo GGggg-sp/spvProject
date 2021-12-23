@@ -1,3 +1,4 @@
+import multiprocessing
 import numpy as np
 import argparse
 import os
@@ -50,6 +51,21 @@ def hamming_distance(hash1, hash2):
     # return np.count_nonzero(hash1 != hash2) + np.count_nonzero(hash1[1:half_length] != hash2[1:half_length])
 
 
+def find_in_phash_table(pic_hash, phash_table):
+    hamming_dist_list = []
+    for vid_path in phash_table:
+        # phash_list_for_sigle_vid = phash_table[vid_path]
+        most_sim_frame_idx = 0
+        most_sim_frame_hash = 1000
+        for (idx, phash) in enumerate(phash_table[vid_path]):
+            sub = hamming_distance(phash, pic_hash)
+            if sub <= most_sim_frame_hash:
+                most_sim_frame_hash = sub
+                most_sim_frame_idx = idx
+        hamming_dist_list.append((vid_path, most_sim_frame_hash, most_sim_frame_idx))
+    return hamming_dist_list
+
+
 def find_vid(pic_path: str, dataset_path: str, resolution: (int, int) = (160, 120), topN: int = 5,
              pic_path_is_url: bool = False,
              pic_bytecontent=None):
@@ -72,6 +88,7 @@ def find_vid(pic_path: str, dataset_path: str, resolution: (int, int) = (160, 12
 
     pic_hash, _ = phash_c(pic)
 
+    # Read phash table
     # pkl_file_path = os.path.join(dataset_path, 'hash_tabel.pkl')
     pkl_file_path_list = [i for i in os.listdir(dataset_path) if i.endswith('.pkl')]
     phash_table = {}
@@ -80,23 +97,32 @@ def find_vid(pic_path: str, dataset_path: str, resolution: (int, int) = (160, 12
         with open(pkl_file_path, 'rb') as f:
             phash_table_t = pk.load(f)
             phash_table.update(phash_table_t)
-    hamming_dist_list = []
-    for vid_path in phash_table:
-        phash_list_for_sigle_vid = phash_table[vid_path]
-        most_sim_frame_idx = 0
-        most_sim_frame_hash = 1000
-        for (idx, phash) in enumerate(phash_table[vid_path]):
-            sub = hamming_distance(phash, pic_hash)
-            if sub <= most_sim_frame_hash:
-                most_sim_frame_hash = sub
-                most_sim_frame_idx = idx
-        hamming_dist_list.append((vid_path, most_sim_frame_hash, most_sim_frame_idx))
+    # Split phash table into 2 part for multiprocessing
 
+    process_count = 4
+    phash_table_segs = []
+    phash_table_total_length = len(phash_table)
+    phash_table_seg_length = phash_table_total_length//(process_count -1)
+    for i in range(0, process_count):
+        phash_table_segs.append(dict(list(phash_table.items())
+                                     [i * phash_table_seg_length: min((i+1)*phash_table_seg_length, phash_table_total_length)]))
+    hamming_dist_list = []
+    res = []
+
+    print('Runing multiprocess pool')
+    with multiprocessing.Pool(processes=process_count) as pool:
+        for i in range(0, process_count):
+            res.append(pool.apply_async(find_in_phash_table, (pic_hash, phash_table_segs[i])))
+        for i in range(0, process_count):
+            hamming_dist_list += res[i].get()
+    # print(hamming_dist_list)
     sorted_similarity_list = sorted(hamming_dist_list, key=lambda x: x[1], reverse=False)[:topN]
+
+    # print(sorted_similarity_list)
     res = []
     for idx in range(0, topN):
         vid_path = sorted_similarity_list[idx][0].split('/')
-        vid_time = datetime.timedelta(seconds=sorted_similarity_list[idx][2] * 4)
+        vid_time = str(datetime.timedelta(seconds=sorted_similarity_list[idx][2] * 4))
         # vid_list = [str(idx + 1), +vid_path[-2], vid_path[-1] ] # +'\t' + str(sorted_similarity_list[idx][1])
         # res = res + vid_path_to_disp + '\t    @ {}\n'.format(vid_time)
         res.append({'vid_index': idx + 1,
@@ -135,7 +161,4 @@ if __name__ == '__main__':
     print('spm-mp4 为 spanking movie jp\nmicro-videos, micro-films为汉责视频\nChinses Spanking 为茉莉视频\n')
     print('该视频可能是下列视频中的一个 in:\n序号:\t所属目录:\t视频名称: （从上往下可能性依次递减）\n')
     for itm in res:
-        print(str(itm['vid_index']) + '\t' +
-              itm['vid_folder'] + '\t' +
-              itm['vid_name'] + '\t' +
-              '@ ' + itm['vid_timestamp' + '\n'])
+        print(str(itm['vid_index']) + '\t' + itm['vid_folder'] + '\t' + itm['vid_name'] + '\t' + '@ ' + itm['vid_timestamp'] + '\n')
